@@ -11,10 +11,42 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="127dp"
-        android:layout_marginRight="127dp"
         android:onClick="fetchTweets"
         android:text="@string/fetch_tweets"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/twitterAccount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="18dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="@string/enter_twitter_name"
+        app:layout_constraintBottom_toTopOf="@+id/fetch_tweets"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="46dp"
+        app:layout_constraintBottom_toTopOf="@+id/twitterAccount"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="invisible"/>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@android:color/background_light"
+        tools:layout_editor_absoluteX="164dp"
+        tools:layout_editor_absoluteY="366dp" />
+
+
 </android.support.constraint.ConstraintLayout>

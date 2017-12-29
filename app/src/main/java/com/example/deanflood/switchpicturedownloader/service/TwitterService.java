@@ -75,9 +75,9 @@ public class TwitterService {
 
     }
 
-    public static void getTwitterFeed(final Context context, final String token,  final MainActivity.VolleyCallback callback) {
+    public static void getTwitterFeed(final Context context, final String token, final String username, final MainActivity.VolleyCallback callback) {
         RequestQueue queue = Volley.newRequestQueue(context);
-        String url = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=dfloodric&count=2";
+        String url = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name="+ username + "&count=10&exclude_replies=1&include_rts=0";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
