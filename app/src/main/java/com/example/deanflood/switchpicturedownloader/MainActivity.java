@@ -1,31 +1,28 @@
 package com.example.deanflood.switchpicturedownloader;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.os.Environment;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import com.example.deanflood.switchpicturedownloader.service.ImageService;
 import com.example.deanflood.switchpicturedownloader.service.TwitterService;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 
 public class MainActivity extends AppCompatActivity {
-    public TwitterService twitterService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     public void fetchTweets(View v) {
 
 
-        twitterService.getTwitterToken(this, new VolleyCallback() {
+        TwitterService.getTwitterToken(this, new VolleyCallback() {
             @Override
             public void onSuccess(Context context, String result) {
                 try {
@@ -49,31 +46,34 @@ public class MainActivity extends AppCompatActivity {
                     String token = json.getString("access_token");
                     EditText username = findViewById(R.id.twitterAccount);
 
-                    twitterService.getTwitterFeed(context, token, username.getText().toString(), new VolleyCallback() {
+                    TwitterService.getTwitterFeed(context, token, username.getText().toString(), new VolleyCallback() {
                         @Override
                         public void onSuccess(Context context, String result) {
-                            ImageView iv = findViewById(R.id.imageView);
                             try {
                                 JSONArray tweetArray = new JSONArray(result);
-                                for (int i=0; i < tweetArray.length(); i++){
-                                    JSONObject tweet = tweetArray.getJSONObject(i);
-                                    if(tweet.has("extended_entities")) {
-                                        JSONObject media = tweet.getJSONObject("extended_entities").getJSONArray("media").getJSONObject(0);
-                                        Picasso.with(context).load(media.getString("media_url_https")).into(iv);
+                                int writePermissionCheck = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
+                                if (writePermissionCheck == PackageManager.PERMISSION_GRANTED) {
+                                    for (int i = 0; i < tweetArray.length(); i++) {
+                                        JSONObject tweet = tweetArray.getJSONObject(i);
+                                        if (tweet.has("extended_entities")) {
+                                            JSONObject media = tweet.getJSONObject("extended_entities").getJSONArray("media").getJSONObject(0);
+                                            if (media.getString("type").equals("photo")) {
 
-
-                                        Toast.makeText(getApplicationContext(), media.getString("media_url_https"), Toast.LENGTH_SHORT).show();
+                                                ImageService.imageDownload(context, media.getString("id_str") + ".png", media.getString("media_url_https"));
+                                                Toast.makeText(getApplicationContext(), media.getString("id_str") + ".png" + " downloaded!", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
                                     }
-
+                                } else{
+                                    ActivityCompat.requestPermissions((Activity) context ,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                                 }
+
                                 progressBar.setVisibility(View.INVISIBLE);
 
                             } catch (Exception e){
                                 e.printStackTrace();
                             }
-
-
                         }
                     });
 
@@ -89,5 +89,24 @@ public class MainActivity extends AppCompatActivity {
     public interface VolleyCallback{
         void onSuccess(Context context, String result);
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Button fetchTweets = findViewById(R.id.fetch_tweets);
+                    fetchTweets.callOnClick();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Write Permissions required to save images", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+        }
+    }
+
 
 }
