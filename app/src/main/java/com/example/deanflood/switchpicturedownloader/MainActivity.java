@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.deanflood.switchpicturedownloader.Interface.VolleyCallback;
 import com.example.deanflood.switchpicturedownloader.service.ImageService;
 import com.example.deanflood.switchpicturedownloader.service.TwitterService;
 
@@ -82,12 +83,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-
-
-
-    public interface VolleyCallback{
-        void onSuccess(Context context, String result);
     }
 
     @Override

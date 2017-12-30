@@ -12,6 +12,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.deanflood.switchpicturedownloader.Interface.VolleyCallback;
 import com.example.deanflood.switchpicturedownloader.MainActivity;
 import com.example.deanflood.switchpicturedownloader.R;
 
@@ -32,7 +33,7 @@ public class TwitterService {
         return new String(Base64.encode(toEncode, Base64.NO_WRAP));
     }
 
-    public static void getTwitterToken(final Context context, final MainActivity.VolleyCallback callback) {
+    public static void getTwitterToken(final Context context, final VolleyCallback callback) {
         RequestQueue queue = Volley.newRequestQueue(context);
         String url = "https://api.twitter.com/oauth2/token";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
@@ -75,7 +76,7 @@ public class TwitterService {
 
     }
 
-    public static void getTwitterFeed(final Context context, final String token, final String username, final MainActivity.VolleyCallback callback) {
+    public static void getTwitterFeed(final Context context, final String token, final String username, final VolleyCallback callback) {
         RequestQueue queue = Volley.newRequestQueue(context);
         String url = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name="+ username + "&count=10&exclude_replies=1&include_rts=0";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
