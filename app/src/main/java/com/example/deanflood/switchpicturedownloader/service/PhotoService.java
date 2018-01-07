@@ -19,7 +19,7 @@ import java.io.IOException;
  * Created by dean.flood on 12/30/17.
  */
 
-public class ImageService {
+public class PhotoService {
 
     public static void imageDownload(Context ctx, String imageName, String imageUrl){
         Picasso.with(ctx)
@@ -63,15 +63,12 @@ public class ImageService {
 
             @Override
             public void onBitmapFailed(Drawable errorDrawable) {
-
             }
 
             @Override
             public void onPrepareLoad(Drawable placeHolderDrawable) {
-
             }
         };
         return target;
     }
-
 }

@@ -3,6 +3,7 @@ package com.example.deanflood.switchpicturedownloader.service;
 import android.content.Context;
 import android.util.Base64;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -13,7 +14,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.deanflood.switchpicturedownloader.Interface.VolleyCallback;
-import com.example.deanflood.switchpicturedownloader.MainActivity;
 import com.example.deanflood.switchpicturedownloader.R;
 
 import java.io.UnsupportedEncodingException;
@@ -91,6 +91,9 @@ public class TwitterService {
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
                 Log.wtf("yoy", error.getMessage());
+                Toast.makeText(context, "Twitter Error: 404", Toast.LENGTH_SHORT).show();
+
+
             }
         }) {
 
